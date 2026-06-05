@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מסלול פסגות — מעקב התקדמות</title>
+  <style>
+    :root {
+      --bg: #fbfaf7;
+      --card: #ffffff;
+      --soft: #f5f2eb;
+      --line: #dedbd3;
+      --text: #101828;
+      --muted: #667085;
+      --purple: #6554d9;
+      --purple2: #7c6bed;
+      --green: #20a875;
+      --orange: #ea6b2d;
+      --red: #ef4444;
+      --shadow: 0 16px 45px rgba(16, 24, 40, 0.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(101, 84, 217, 0.08), transparent 28%),
+        radial-gradient(circle at 80% 70%, rgba(234, 107, 45, 0.06), transparent 26%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 26px;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: auto;
+    }
+
+    header {
+      text-align: right;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .track-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-start;
+      margin-top: 22px;
+    }
+
+    .track-btn {
+      min-width: 160px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .track-btn.active {
+      background: linear-gradient(180deg, var(--purple2), var(--purple));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 20px rgba(101, 84, 217, 0.25);
+    }
+
+    .main-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .total-row {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .big-number {
+      font-size: 36px;
+      font-weight: 800;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 22px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--purple), var(--purple2));
+      border-radius: 999px;
+      transition: 0.35s ease;
+    }
+
+    .percent-line {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .left {
+      display: grid;
+      gap: 12px;
+    }
+
+    .category {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .category-head {
+      display: grid;
+      grid-template-columns: 28px 120px 1fr 170px 18px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .arrow {
+      font-size: 18px;
+      color: var(--text);
+      transform: rotate(0deg);
+    }
+
+    .category.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .category-title {
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      justify-self: end;
+    }
+
+    .mini-track {
+      height: 7px;
+      background: var(--soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .mini-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: 0.35s ease;
+    }
+
+    .small-num {
+      font-weight: 700;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .semester-wrap {
+      display: none;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,0.55);
+    }
+
+    .category.open .semester-wrap {
+      display: block;
+    }
+
+    .semester {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .semester:last-child {
+      border-bottom: 0;
+    }
+
+    .semester-head {
+      display: grid;
+      grid-template-columns: 28px 1fr 130px;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+    }
+
+    .semester-title {
+      font-weight: 700;
+    }
+
+    .badge {
+      justify-self: start;
+      background: rgba(101, 84, 217, 0.12);
+      color: var(--purple);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-weight: 700;
+      direction: ltr;
+    }
+
+    .courses {
+      display: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .semester.open .courses {
+      display: block;
+    }
+
+    .table-head, .course-row {
+      display: grid;
+      grid-template-columns: 70px 90px 1fr 160px 44px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .table-head {
+      background: #f3f0e8;
+      color: #344054;
+      font-weight: 700;
+    }
+
+    .course-row {
+      background: rgba(255,255,255,0.72);
+    }
+
+    .course-row:last-child {
+      border-bottom: 0;
+    }
+
+    .course-row.selected {
+      outline: 2px solid rgba(101, 84, 217, 0.18);
+      background: rgba(101, 84, 217, 0.045);
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 9px 10px;
+      border-radius: 9px;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--purple);
+      cursor: pointer;
+    }
+
+    .menu {
+      border: 0;
+      background: transparent;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .avg-card {
+      text-align: center;
+    }
+
+    .side-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .avg {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 6px 0;
+    }
+
+    .avg-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #f4f1ea;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .tab {
+      border: 0;
+      padding: 9px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--purple);
+      color: white;
+    }
+
+    .form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form label {
+      display: grid;
+      gap: 6px;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .primary {
+      border: 0;
+      background: linear-gradient(180deg, var(--purple2), var(--purple));
+      color: white;
+      padding: 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .outline {
+      border: 1px solid rgba(101, 84, 217, 0.35);
+      background: transparent;
+      color: var(--purple);
+      padding: 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .danger {
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      background: rgba(239, 68, 68, 0.06);
+      color: var(--red);
+      padding: 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 14px;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .category-head {
+        grid-template-columns: 24px 100px 1fr 80px 14px;
+      }
+
+      .table-head, .course-row {
+        grid-template-columns: 58px 70px 1fr;
+      }
+
+      .table-head div:nth-child(4),
+      .table-head div:nth-child(5),
+      .course-row div:nth-child(4),
+      .course-row button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>מסלול פסגות — מעקב התקדמות</h1>
+      <div class="subtitle">סמן קורסים שסיימת כדי לעדכן את ההתקדמות שלך</div>
+
+      <div class="track-buttons">
+        <button class="track-btn active" id="btn-cs" onclick="setTrack('cs')">חוקר מדמ״ח</button>
+        <button class="track-btn" id="btn-is" onclick="setTrack('is')">חוקר מערכות מידע</button>
+      </div>
+    </header>
+
+    <section class="main-card">
+      <div class="total-row">
+        <div class="big-number"><span id="doneCredits">0.0</span> / <span id="totalCredits">0.0</span></div>
+        <div class="label">סה״כ נקודות זכות</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="mainProgress"></div>
+      </div>
+      <div class="percent-line">
+        <span id="mainPercent">0%</span>
+        <span>0%</span>
+      </div>
+    </section>
+
+    <section class="content">
+      <main class="left" id="categories"></main>
+
+      <aside class="side">
+        <div class="side-card avg-card">
+          <div class="side-title">ממוצע כולל</div>
+          <div class="avg" id="avgGrade">-</div>
+          <div class="avg-sub">מבוסס על <span id="gradedCredits">0.0</span> נק״ז</div>
+          <div class="tabs">
+            <button class="tab active" id="tab-all" onclick="setAvgMode('all')">כולל הקורסים</button>
+            <button class="tab" id="tab-graded" onclick="setAvgMode('graded')">רק קורסים עם ציון</button>
+          </div>
+        </div>
+
+        <div class="side-card">
+          <div class="side-title">עריכת קורס</div>
+          <div class="form">
+            <label>שם הקורס
+              <input id="editName" placeholder="בחר קורס מהרשימה">
+            </label>
+            <label>מס׳ קורס
+              <input id="editCode">
+            </label>
+            <div class="two">
+              <label>נק״ז של הקורס
+                <select id="editCredits"></select>
+              </label>
+              <label>ציון
+                <input id="editGrade" type="number" min="0" max="100">
+              </label>
+            </div>
+            <div class="two">
+              <label>סמסטר
+                <input id="editSemester">
+              </label>
+              <label>קטגוריה
+                <select id="editCategory">
+                  <option value="mandatory">קורסי חובה</option>
+                  <option value="general">קורסים כלליים</option>
+                  <option value="choiceCS">בחירה מדמ״ח</option>
+                  <option value="choiceIS">בחירה מערכות מידע</option>
+                </select>
+              </label>
+            </div>
+            <label class="helper">
+              <span><input id="editDone" type="checkbox"> הקורס הושלם ונחשב בבר</span>
+            </label>
+            <label class="helper">
+              <span><input id="editBinary" type="checkbox"> עובר בינארי, נחשב כהושלם אבל לא נכנס לממוצע</span>
+            </label>
+            <div class="actions">
+              <button class="primary" onclick="saveCourse()">שמור שינויים</button>
+              <button class="danger" onclick="deleteSelected()">מחק קורס</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="outline" onclick="newCourse()">＋ הוסף קורס חדש</button>
+        <button class="outline" onclick="exportData()">⬇ יצוא גיבוי</button>
+        <button class="outline" onclick="document.getElementById('importFile').click()">⬆ ייבוא גיבוי</button>
+        <button class="danger" onclick="resetSavedData()">איפוס נתונים</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)">
+
+        <div class="helper">
+          הערה: קורס נספר להתקדמות רק לפי סימון וי. ציון לא חובה. אם בקטגוריה מסוימת עברת את המכסה, הבר נחתך במקסימום הדרוש.
+          <br><br>
+          אין מגבלה על כמות הקורסים שאפשר להוסיף בכל קטגוריה. ההגבלה היחידה היא על הנק״ז של קורס בודד:
+          מדמ״ח יכול להיות 2/3/4, מערכות מידע יכול להיות 1/3, וקורס כללי יכול להיות 2/4.
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    let track = "cs";
+    let avgMode = "all";
+    let selectedId = null;
+    const openCategories = {};
+    const openSemesters = {};
+
+    let courses = [
+      {s:"א", code:"201-1-9531", name:"מבוא ללוגיקה ותורת הקבוצות", cr:5.0, cat:"mandatory"},
+      {s:"א", code:"202-1-1021", name:"אלגברה ליניארית להנדסה", cr:4.5, cat:"mandatory"},
+      {s:"א", code:"202-1-1011", name:"יישומים מתמטיים במדעי המחשב", cr:1.0, cat:"mandatory"},
+      {s:"א", code:"382-1-1101", name:"מבוא למדעי המחשב", cr:5.0, cat:"mandatory"},
+      {s:"א", code:"202-1-1531", name:"מבוא להנדסת נתונים", cr:3.5, cat:"mandatory"},
+
+      {s:"ב", code:"202-1-1061", name:"חדו״א א׳1 להנדסת תוכנה ומדעי המחשב", cr:5.0, cat:"mandatory"},
+      {s:"ב", code:"202-1-5181", name:"מבנים בדידים וקומבינטוריקה", cr:5.0, cat:"mandatory"},
+      {s:"ב", code:"202-1-1031", name:"עקרונות תכנות מונחה עצמים", cr:3.0, cat:"mandatory"},
+      {s:"ב", code:"202-1-0021", name:"מבני נתונים", cr:5.0, cat:"mandatory"},
+      {s:"ב", code:"153-1-5051", name:"אנגלית מתקדמים ב׳", cr:2.0, cat:"mandatory"},
+      {s:"ב", code:"372-1-1105", name:"מבוא להנדסת תוכנה", cr:4.0, cat:"mandatory"},
+
+      {s:"ג", code:"202-1-2041", name:"בסיסי נתונים", cr:3.5, cat:"mandatory"},
+      {s:"ג", code:"202-1-2041", name:"תכנון אלגוריתמים", cr:5.0, cat:"mandatory"},
+      {s:"ג", code:"202-1-2031", name:"תכנות מערכות", cr:5.0, cat:"mandatory"},
+      {s:"ג", code:"201-1-2371", name:"חדו״א א׳2 להנדסת תוכנה ומדעי המחשב", cr:5.0, cat:"mandatory"},
+      {s:"ג", code:"372-1-2501", name:"מבנה מערכות מחשוב", cr:3.5, cat:"mandatory"},
+
+      {s:"ד", code:"202-1-2011", name:"הסתברות להנדסת תוכנה", cr:2.5, cat:"mandatory"},
+      {s:"ד", code:"202-1-2011", name:"מודלים חישוביים", cr:5.0, cat:"mandatory"},
+      {s:"ד", code:"202-1-2051", name:"עקרונות שפות תכנות", cr:5.0, cat:"mandatory"},
+      {s:"ד", code:"203-1-1651", name:"פיסיקה מודרנית להנדסת תוכנה", cr:3.5, cat:"mandatory"},
+      {s:"ד", code:"372-1-3401", name:"ניתוח ועיצוב מערכות להנדסת תוכנה", cr:5.0, cat:"mandatory"},
+
+      {s:"ה", code:"202-1-3081", name:"עקרונות הקומפילציה / עקרונות מדעי המחשב / מבוא ללמידה חישובית", cr:5.0, cat:"mandatory"},
+      {s:"ה", code:"202-1-3051", name:"יסודות הנדסת תוכנה", cr:3.5, cat:"mandatory"},
+      {s:"ה", code:"202-1-2081", name:"מעבדה בתכנות מערכות", cr:2.0, cat:"mandatory"},
+      {s:"ה", code:"372-1-3041", name:"מבוא לתקשורת נתונים", cr:3.5, cat:"mandatory"},
+      {s:"ה", code:"372-1-3071", name:"סטטיסטיקה", cr:3.5, cat:"mandatory"},
+
+      {s:"ו", code:"202-1-3031", name:"מערכות הפעלה", cr:5.0, cat:"mandatory"},
+      {s:"ו", code:"202-1-5141", name:"סדנא ליישום פרויקט תוכנה", cr:3.0, cat:"mandatory"},
+      {s:"ו", code:"202-1-3061", name:"אימות תוכנה בשיטות פורמליות", cr:5.0, cat:"mandatory"},
+      {s:"ו", code:"372-1-4601", name:"אבטחת מחשבים ורשתות תקשורת", cr:3.5, cat:"mandatory"},
+
+      {s:"ז", code:"373-1-5001", name:"פרויקט-תיזה", cr:4.0, cat:"mandatory"},
+      {s:"ז", code:"372-1-3501", name:"הנדסת איכות תוכנה", cr:3.5, cat:"mandatory"},
+      {s:"ז", code:"382-1-2705", name:"אנליזה נומרית ואופטימיזציה להנדסת נתונים", cr:3.5, cat:"mandatory"},
+      {s:"ז", code:"372-1-3503", name:"מבוא לבינה מלאכותית להנדסת תוכנה", cr:3.5, cat:"mandatory"},
+
+      {s:"ח", code:"373-1-5002", name:"פרויקט-תיזה", cr:4.0, cat:"mandatory"},
+
+      {s:"כללי", code:"GEN-1", name:"קורס כללי 2 נק״ז", cr:2.0, cat:"general"},
+      {s:"כללי", code:"GEN-2", name:"קורס כללי 4 נק״ז", cr:4.0, cat:"general"},
+
+      {s:"בחירה", code:"CS-E1", name:"בחירה מדמ״ח לדוגמה 3 נק״ז", cr:3.0, cat:"choiceCS"},
+      {s:"בחירה", code:"CS-E2", name:"בחירה מדמ״ח לדוגמה 4 נק״ז", cr:4.0, cat:"choiceCS"},
+      {s:"בחירה", code:"CS-E3", name:"בחירה מדמ״ח לדוגמה 2 נק״ז", cr:2.0, cat:"choiceCS"},
+      {s:"בחירה", code:"IS-E1", name:"בחירה מערכות מידע לדוגמה 3 נק״ז", cr:3.0, cat:"choiceIS"},
+      {s:"בחירה", code:"IS-E2", name:"בחירה מערכות מידע לדוגמה 1 נק״ז", cr:1.0, cat:"choiceIS"}
+    ].map((c, i) => ({...c, id: i + 1, done: false, binary: false, grade: ""}));
+
+    const STORAGE_KEY = "psagotProgressDataV1";
+
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        track,
+        avgMode,
+        selectedId,
+        openCategories,
+        openSemesters,
+        courses
+      }));
+    }
+
+    function loadFromStorage() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        if (data.track) track = data.track;
+        if (data.avgMode) avgMode = data.avgMode;
+        if (data.selectedId) selectedId = data.selectedId;
+
+        if (data.openCategories) {
+          Object.assign(openCategories, data.openCategories);
+        }
+
+        if (data.openSemesters) {
+          Object.assign(openSemesters, data.openSemesters);
+        }
+
+        if (Array.isArray(data.courses)) {
+          courses = data.courses;
+        }
+      } catch (e) {
+        console.warn("Could not load saved data", e);
+      }
+    }
+
+
+    function fmt(n) {
+      return Number(n).toFixed(1);
+    }
+
+    function categoryInfo() {
+      const mandatory = sum(courses.filter(c => c.cat === "mandatory").map(c => c.cr));
+      return {
+        mandatory: {name: "קורסי חובה", target: mandatory, color: "#6554d9"},
+        general: {name: "קורסים כלליים", target: 6, color: "#20a875"},
+        choiceCS: {name: "קורסי בחירה מדמ״ח", target: track === "cs" ? 23 : 10, color: "#ea6b2d"},
+        choiceIS: {name: "קורסי בחירה מערכות מידע", target: track === "cs" ? 6 : 19, color: "#0ea5e9"}
+      };
+    }
+
+    function sum(arr) {
+      return arr.reduce((a, b) => a + Number(b || 0), 0);
+    }
+
+    function doneRaw(cat) {
+      return sum(courses.filter(c => c.cat === cat && c.done).map(c => c.cr));
+    }
+
+    function doneCapped(cat) {
+      const info = categoryInfo()[cat];
+      return Math.min(doneRaw(cat), info.target);
+    }
+
+    function totalTarget() {
+      return sum(Object.values(categoryInfo()).map(x => x.target));
+    }
+
+    function totalDone() {
+      return sum(Object.keys(categoryInfo()).map(doneCapped));
+    }
+
+    function setTrack(t) {
+      track = t;
+      document.getElementById("btn-cs").classList.toggle("active", t === "cs");
+      document.getElementById("btn-is").classList.toggle("active", t === "is");
+      saveToStorage();
+      render();
+    }
+
+    function setAvgMode(mode) {
+      avgMode = mode;
+      document.getElementById("tab-all").classList.toggle("active", mode === "all");
+      document.getElementById("tab-graded").classList.toggle("active", mode === "graded");
+      saveToStorage();
+      render();
+    }
+
+    function toggleCategory(cat) {
+      openCategories[cat] = !openCategories[cat];
+      saveToStorage();
+      render();
+    }
+
+    function toggleSemester(key) {
+      openSemesters[key] = !openSemesters[key];
+      saveToStorage();
+      render();
+    }
+
+    function toggleDone(id, checked) {
+      const c = courses.find(x => x.id === id);
+      c.done = checked;
+      selectCourse(id);
+      refreshCreditOptions("choiceCS", 3);
+      saveToStorage();
+      render();
+    }
+
+    function allowedCredits(cat) {
+      if (cat === "choiceCS") return [2, 3, 4];
+      if (cat === "choiceIS") return [1, 3];
+      if (cat === "general") return [2, 4];
+      return null; // חובה נשאר פתוח כי יש נק״זים שונים בתוכנית
+    }
+
+    function refreshCreditOptions(cat, currentValue) {
+      const select = document.getElementById("editCredits");
+      const allowed = allowedCredits(cat);
+      select.innerHTML = "";
+
+      if (!allowed) {
+        const values = [...new Set([currentValue, 1, 2, 2.5, 3, 3.5, 4, 4.5, 5].filter(v => v !== "" && v !== null && !isNaN(Number(v))).map(Number))]
+          .sort((a,b) => a-b);
+        values.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = fmt(v);
+          select.appendChild(opt);
+        });
+      } else {
+        allowed.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = fmt(v);
+          select.appendChild(opt);
+        });
+      }
+
+      const numeric = Number(currentValue);
+      if ([...select.options].some(o => Number(o.value) === numeric)) {
+        select.value = numeric;
+      } else if (allowed && allowed.length) {
+        select.value = allowed[0];
+      }
+    }
+
+    document.getElementById("editCategory").addEventListener("change", () => {
+      refreshCreditOptions(document.getElementById("editCategory").value, document.getElementById("editCredits").value);
+    });
+
+    function selectCourse(id) {
+      selectedId = id;
+      const c = courses.find(x => x.id === id);
+      if (!c) return;
+
+      document.getElementById("editName").value = c.name;
+      document.getElementById("editCode").value = c.code;
+      document.getElementById("editCategory").value = c.cat;
+      refreshCreditOptions(c.cat, c.cr);
+      document.getElementById("editGrade").value = c.grade;
+      document.getElementById("editSemester").value = c.s;
+      document.getElementById("editDone").checked = c.done;
+      document.getElementById("editBinary").checked = c.binary;
+    }
+
+    function saveCourse() {
+      if (!selectedId) return alert("קודם תבחר קורס מהרשימה");
+
+      const c = courses.find(x => x.id === selectedId);
+      const cr = Number(document.getElementById("editCredits").value);
+
+      if (!document.getElementById("editName").value.trim()) return alert("שם קורס חסר");
+      if (isNaN(cr) || cr <= 0) return alert("נק״ז לא תקין");
+
+      const selectedCategory = document.getElementById("editCategory").value;
+      const allowed = allowedCredits(selectedCategory);
+      if (allowed && !allowed.includes(cr)) {
+        return alert("הנק״ז לא מתאים לקטגוריה הזאת");
+      }
+
+      c.name = document.getElementById("editName").value.trim();
+      c.code = document.getElementById("editCode").value.trim();
+      c.cr = cr;
+      c.grade = document.getElementById("editGrade").value;
+      c.s = document.getElementById("editSemester").value.trim() || "חדש";
+      c.cat = selectedCategory;
+      c.done = document.getElementById("editDone").checked;
+      c.binary = document.getElementById("editBinary").checked;
+
+      saveToStorage();
+      render();
+    }
+
+    function deleteSelected() {
+      if (!selectedId) return alert("קודם תבחר קורס למחיקה");
+      courses = courses.filter(c => c.id !== selectedId);
+      selectedId = null;
+      clearForm();
+      saveToStorage();
+      render();
+    }
+
+    function newCourse() {
+      const id = Date.now();
+      const newC = {
+        id,
+        s: "חדש",
+        code: "",
+        name: "קורס חדש",
+        cr: 3,
+        cat: "choiceCS",
+        done: false,
+        binary: false,
+        grade: ""
+      };
+      courses.push(newC);
+      openCategories[newC.cat] = true;
+      openSemesters[newC.cat + "_חדש"] = true;
+      selectCourse(id);
+      render();
+    }
+
+    function clearForm() {
+      ["editName","editCode","editCredits","editGrade","editSemester"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("editDone").checked = false;
+      document.getElementById("editBinary").checked = false;
+    }
+
+    function average() {
+      let weighted = 0;
+      let credits = 0;
+
+      courses.forEach(c => {
+        const grade = Number(c.grade);
+        const hasGrade = c.grade !== "" && !isNaN(grade);
+
+        if (!c.done || c.binary) return;
+        if (avgMode === "graded" && !hasGrade) return;
+        if (!hasGrade) return;
+
+        weighted += grade * c.cr;
+        credits += c.cr;
+      });
+
+      return {
+        avg: credits ? (weighted / credits).toFixed(1) : "-",
+        credits
+      };
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify({
+        track,
+        avgMode,
+        selectedId,
+        openCategories,
+        openSemesters,
+        courses
+      }, null, 2)], {type: "application/json"});
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "psagot-progress-backup.json";
+      a.click();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function() {
+        try {
+          const data = JSON.parse(reader.result);
+
+          if (data.track) track = data.track;
+          if (data.avgMode) avgMode = data.avgMode;
+          if (Array.isArray(data.courses)) courses = data.courses;
+
+          Object.keys(openCategories).forEach(k => delete openCategories[k]);
+          Object.keys(openSemesters).forEach(k => delete openSemesters[k]);
+
+          if (data.openCategories) Object.assign(openCategories, data.openCategories);
+          if (data.openSemesters) Object.assign(openSemesters, data.openSemesters);
+
+          selectedId = data.selectedId || null;
+          saveToStorage();
+          render();
+          alert("הגיבוי נטען בהצלחה");
+        } catch (e) {
+          alert("קובץ הגיבוי לא תקין");
+        }
+
+        event.target.value = "";
+      };
+
+      reader.readAsText(file);
+    }
+
+    function resetSavedData() {
+      if (!confirm("בטוח לאפס את כל הנתונים ששמרת?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    function render() {
+      const cats = categoryInfo();
+      const done = totalDone();
+      const total = totalTarget();
+      const pct = total ? Math.round(done / total * 100) : 0;
+
+      document.getElementById("doneCredits").innerText = fmt(done);
+      document.getElementById("totalCredits").innerText = fmt(total);
+      document.getElementById("mainProgress").style.width = Math.min(100, pct) + "%";
+      document.getElementById("mainPercent").innerText = pct + "%";
+
+      const avg = average();
+      document.getElementById("avgGrade").innerText = avg.avg;
+      document.getElementById("gradedCredits").innerText = fmt(avg.credits);
+
+      const root = document.getElementById("categories");
+      root.innerHTML = "";
+
+      Object.entries(cats).forEach(([cat, info]) => {
+        const raw = doneRaw(cat);
+        const capped = doneCapped(cat);
+        const catPct = info.target ? Math.min(100, capped / info.target * 100) : 0;
+        const catCourses = courses.filter(c => c.cat === cat);
+        const sems = [...new Set(catCourses.map(c => c.s))];
+
+        const catDiv = document.createElement("section");
+        catDiv.className = "category " + (openCategories[cat] ? "open" : "");
+
+        catDiv.innerHTML = `
+          <div class="category-head" onclick="toggleCategory('${cat}')">
+            <div class="arrow">⌄</div>
+            <div class="small-num">${fmt(capped)} / ${fmt(info.target)}</div>
+            <div class="mini-track"><div class="mini-fill" style="width:${catPct}%; background:${info.color}"></div></div>
+            <div class="category-title">${info.name}</div>
+            <div class="dot" style="background:${info.color}"></div>
+          </div>
+          <div class="semester-wrap"></div>
+        `;
+
+        const wrap = catDiv.querySelector(".semester-wrap");
+
+        sems.forEach(s => {
+          const key = cat + "_" + s;
+          const list = catCourses.filter(c => c.s === s);
+          const semDone = sum(list.filter(c => c.done).map(c => c.cr));
+          const semTotal = sum(list.map(c => c.cr));
+
+          const semDiv = document.createElement("div");
+          semDiv.className = "semester " + (openSemesters[key] ? "open" : "");
+
+          semDiv.innerHTML = `
+            <div class="semester-head" onclick="toggleSemester('${key}')">
+              <div class="arrow">⌄</div>
+              <div class="semester-title">סמסטר ${s}</div>
+              <div class="badge">${fmt(semDone)} / ${fmt(semTotal)}</div>
+            </div>
+            <div class="courses">
+              <div class="table-head">
+                <div>הושלם</div>
+                <div>נק״ז</div>
+                <div>שם קורס</div>
+                <div>מס׳ קורס</div>
+                <div></div>
+              </div>
+              ${list.map(c => `
+                <div class="course-row ${selectedId === c.id ? "selected" : ""}" onclick="selectCourse(${c.id})">
+                  <div><input type="checkbox" ${c.done ? "checked" : ""} onclick="event.stopPropagation()" onchange="toggleDone(${c.id}, this.checked)"></div>
+                  <div>${fmt(c.cr)}</div>
+                  <div>${c.name}${c.binary ? " <span class='label'>(עובר)</span>" : ""}${c.grade !== "" ? " <span class='label'>ציון: " + c.grade + "</span>" : ""}</div>
+                  <div>${c.code || "-"}</div>
+                  <button class="menu" onclick="event.stopPropagation(); selectCourse(${c.id})">⋮</button>
+                </div>
+              `).join("")}
+            </div>
+          `;
+
+          wrap.appendChild(semDiv);
+        });
+
+        root.appendChild(catDiv);
+      });
+    }
+
+    openCategories.mandatory = true;
+    openSemesters["mandatory_א"] = true;
+    loadFromStorage();
+    document.getElementById("btn-cs").classList.toggle("active", track === "cs");
+    document.getElementById("btn-is").classList.toggle("active", track === "is");
+    document.getElementById("tab-all").classList.toggle("active", avgMode === "all");
+    document.getElementById("tab-graded").classList.toggle("active", avgMode === "graded");
+    render();
+  </script>
+</body>
+</html>
