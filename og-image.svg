@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" dir="rtl">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6554d9"/>
+      <stop offset="1" stop-color="#7c6bed"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="250" font-family="Arial, sans-serif" font-size="120" text-anchor="middle">🎓</text>
+  <text x="600" y="370" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff" text-anchor="middle">מסלול פסגות</text>
+  <text x="600" y="450" font-family="Arial, sans-serif" font-size="42" fill="#ece9fb" text-anchor="middle">מעקב התקדמות בתואר וחישוב ממוצע</text>
+  <rect x="350" y="510" width="500" height="20" rx="10" fill="#ffffff" opacity="0.25"/>
+  <rect x="350" y="510" width="320" height="20" rx="10" fill="#ffffff"/>
+</svg>
